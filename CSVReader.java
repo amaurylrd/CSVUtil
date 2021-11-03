@@ -31,6 +31,13 @@ public class CSVReader extends CSVEdit {
     }
 
     private String[] parseLine(String line, String separator) {
-        return line.split(separator);
+        String regex = separator + "(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"; //don't split on separator into text in quotes
+        String[] matches = line.split(regex);
+        
+        for (int i = 0; i < matches.length; ++i) {
+            matches[i] = matches[i].strip().replaceAll("^\"+|\"+$", ""); //removes those quotes from both sides of the text
+        }
+
+        return matches;
     }
 }
